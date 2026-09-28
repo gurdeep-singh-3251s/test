@@ -1,0 +1,256 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id        String    @id @default(cuid())
+  slug      String    @unique
+  name      String
+  tagline   String
+  image     String
+  products  Product[]
+  createdAt DateTime  @default(now())
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  description String
+  price       Int
+  compareAt   Int?
+  image       String
+  gallery     String[]
+  sizes       String[]
+  featured    Boolean  @default(false)
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id])
+  createdAt   DateTime @default(now())
+
+  @@index([categoryId])
+  @@index([featured])
+}
+
+model Store {
+  id         String          @id @default(cuid())
+  slug       String          @unique
+  name       String
+  city       String
+  address    String
+  phone      String
+  manager    String
+  focus      String          @default("All")
+  createdAt  DateTime        @default(now())
+  staff      Staff[]
+  payments   StaffPayment[]
+  bills      UtilityBill[]
+  purchases  Purchase[]
+  expenses   Expense[]
+  inventory  InventoryItem[]
+  customers  Customer[]
+  sales      Sale[]
+  shipments  Shipment[]
+  tasks      RecurringTask[]
+  shopOrders ShopOrder[]
+}
+
+model Staff {
+  id       String         @id @default(cuid())
+  storeId  String
+  store    Store          @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name     String
+  role     String
+  duty     String
+  salary   Int
+  phone    String
+  status   String         @default("active")
+  joinedAt DateTime
+  payments StaffPayment[]
+}
+
+model StaffPayment {
+  id      String   @id @default(cuid())
+  storeId String
+  store   Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  staffId String
+  staff   Staff    @relation(fields: [staffId], references: [id], onDelete: Cascade)
+  amount  Int
+  period  String
+  paidAt  DateTime
+  note    String   @default("")
+}
+
+model UtilityBill {
+  id      String   @id @default(cuid())
+  storeId String
+  store   Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  type    String
+  amount  Int
+  period  String
+  dueDate DateTime
+  status  String
+  note    String   @default("")
+}
+
+model Purchase {
+  id          String   @id @default(cuid())
+  storeId     String
+  store       Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  itemName    String
+  supplier    String
+  category    String
+  quantity    Int
+  unitCost    Int
+  total       Int
+  purchasedAt DateTime
+}
+
+model Expense {
+  id       String   @id @default(cuid())
+  storeId  String
+  store    Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  title    String
+  category String
+  amount   Int
+  spentAt  DateTime
+  note     String   @default("")
+}
+
+model InventoryItem {
+  id           String @id @default(cuid())
+  storeId      String
+  store        Store  @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  sku          String
+  name         String
+  category     String
+  quantity     Int
+  reserved     Int    @default(0)
+  reorderLevel Int
+  costPrice    Int
+  sellPrice    Int
+
+  @@index([storeId, sku])
+}
+
+model Customer {
+  id         String   @id @default(cuid())
+  storeId    String
+  store      Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  name       String
+  phone      String
+  email      String
+  visits     Int
+  totalSpent Int
+  firstVisit DateTime
+  lastVisit  DateTime
+}
+
+model Sale {
+  id       String   @id @default(cuid())
+  storeId  String
+  store    Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  itemName String
+  quantity Int
+  amount   Int
+  channel  String
+  customer String
+  soldAt   DateTime
+}
+
+model Shipment {
+  id        String   @id @default(cuid())
+  storeId   String
+  store     Store    @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  itemName  String
+  supplier  String
+  quantity  Int
+  status    String
+  tracking  String
+  eta       DateTime
+  orderedAt DateTime
+}
+
+model RecurringTask {
+  id      String    @id @default(cuid())
+  storeId String
+  store   Store     @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  title   String
+  kind    String
+  cadence String
+  lastRun DateTime?
+  nextRun DateTime
+  active  Boolean   @default(true)
+}
+
+model ShopOrder {
+  id        String          @id @default(cuid())
+  storeId   String
+  store     Store           @relation(fields: [storeId], references: [id], onDelete: Cascade)
+  email     String
+  name      String
+  phone     String
+  address   String
+  city      String
+  pincode   String
+  total     Int
+  status    String          @default("placed")
+  tracking  String          @default("")
+  channel   String          @default("online")
+  items     ShopOrderItem[]
+  createdAt DateTime        @default(now())
+}
+
+model ShopOrderItem {
+  id        String    @id @default(cuid())
+  orderId   String
+  order     ShopOrder @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  name      String
+  price     Int
+  quantity  Int
+  size      String?
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  email     String
+  name      String
+  phone     String
+  address   String
+  city      String
+  pincode   String
+  total     Int
+  status    String      @default("placed")
+  items     OrderItem[]
+  createdAt DateTime    @default(now())
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  order     Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId String
+  name      String
+  price     Int
+  quantity  Int
+  size      String?
+}
+
+model ContactMessage {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  createdAt DateTime @default(now())
+}
+
+model Subscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  createdAt DateTime @default(now())
+}

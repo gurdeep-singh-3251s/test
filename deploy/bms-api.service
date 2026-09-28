@@ -1,0 +1,17 @@
+[Unit]
+Description=BMS Fashionz API
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/home/ubuntu/bms/server
+EnvironmentFile=/home/ubuntu/bms/server/.env
+Environment=NODE_ENV=production
+Environment=PATH=/usr/local/bin:/usr/bin
+ExecStart=/usr/bin/npm start
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

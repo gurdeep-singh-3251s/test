@@ -1,0 +1,11 @@
+{
+  "name": "bms-fashionz",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently -n api,web -c cyan,magenta \"npm run dev --prefix server\" \"npm run dev --prefix web\"",
+    "setup": "npm install --prefix server && npm run db:setup --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

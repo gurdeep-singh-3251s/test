@@ -1,0 +1,228 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f6f1e8;
+  --foreground: #12110f;
+  --os-desktop: #0a0908;
+  --os-chrome: #141210;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-paper: #f6f1e8;
+  --color-ivory: #fbf8f3;
+  --color-ink: #12110f;
+  --color-muted: #6f6a62;
+  --color-gold: #c4a574;
+  --color-line: #e4ddd2;
+  --color-stone: #ece6db;
+  --font-sans: var(--font-outfit);
+  --font-serif: var(--font-cormorant);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--os-desktop);
+  color: var(--foreground);
+  font-family: var(--font-outfit), sans-serif;
+}
+
+h1,
+h2,
+h3,
+.font-serif {
+  font-family: var(--font-cormorant), serif;
+}
+
+::selection {
+  background: #c4a574;
+  color: #12110f;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.marquee-track {
+  animation: marquee 28s linear infinite;
+}
+
+.card-rise {
+  transition:
+    transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.45s ease;
+}
+
+.card-rise:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px rgba(18, 17, 15, 0.1);
+}
+
+.os-desktop {
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 420px at 8% -8%, rgba(196, 165, 116, 0.16), transparent 55%),
+    radial-gradient(700px 380px at 100% 100%, rgba(196, 165, 116, 0.08), transparent 50%),
+    var(--os-desktop);
+}
+
+.os-window {
+  display: flex;
+  min-height: calc(100vh - 24px);
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  background: var(--background);
+  box-shadow: 0 40px 120px rgba(0, 0, 0, 0.5);
+}
+
+.os-window-dark {
+  background: #0f0e0c;
+  color: #f6f1e8;
+}
+
+.os-titlebar {
+  display: flex;
+  height: 44px;
+  flex-shrink: 0;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--os-chrome);
+  padding: 0 14px;
+  color: #f6f1e8;
+}
+
+.os-light {
+  height: 10px;
+  width: 10px;
+  border-radius: 999px;
+}
+
+.os-statusbar {
+  display: flex;
+  height: 28px;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  background: #100f0d;
+  padding: 0 14px;
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: rgba(246, 241, 232, 0.45);
+}
+
+@keyframes outfit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.outfit-ring {
+  height: 72px;
+  width: 72px;
+  margin-bottom: 1.25rem;
+  border: 2px solid rgba(246, 241, 232, 0.15);
+  border-top-color: #c4a574;
+  border-radius: 999px;
+  animation: outfit-spin 0.9s linear infinite;
+}
+
+.outfit-build {
+  animation: fade-up 0.45s ease;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dash {
+  min-height: 100vh;
+  background: #e8eef5;
+  color: #0f172a;
+}
+
+.dash h1,
+.dash h2,
+.dash h3 {
+  font-family: var(--font-outfit), sans-serif;
+}
+
+.dash-top {
+  display: flex;
+  height: 56px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid #d7e0ea;
+  background: #ffffff;
+  padding: 0 20px;
+}
+
+.dash-side {
+  background: #0b1f3a;
+  color: #e2e8f0;
+}
+
+.dash-card {
+  border: 1px solid #d7e0ea;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+}
+
+.dash-kpi {
+  position: relative;
+  overflow: hidden;
+}
+
+.dash-kpi::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 4px;
+  background: #0f766e;
+}
+
+.dash-kpi.kpi-blue::before {
+  background: #0284c7;
+}
+
+.dash-kpi.kpi-amber::before {
+  background: #f59e0b;
+}
+
+.dash-kpi.kpi-rose::before {
+  background: #f43f5e;
+}
+
+@media (max-width: 768px) {
+  .os-desktop {
+    padding: 0;
+  }
+
+  .os-window {
+    min-height: 100vh;
+    border-radius: 0;
+  }
+}
